@@ -4,10 +4,10 @@ from .models import Habit, HabitLog
 class HabitLogSerializer(serializers.ModelSerializer):
     class Meta:
         model = HabitLog
-        fields = ['id', 'completed_date']
+        # We added 'habit' here so the view can read it
+        fields = ['id', 'habit', 'completed_date']
 
 class HabitSerializer(serializers.ModelSerializer):
-    # This includes the logs inside the habit data, making it easy to render the dashboard
     logs = HabitLogSerializer(many=True, read_only=True)
 
     class Meta:
