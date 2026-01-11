@@ -25,7 +25,7 @@ services:
       - db
     environment:
       - DEBUG=False
-      - SECRET_KEY=docker-secret-key
+      - SECRET_KEY=django-insecure-ip9sp&=ac0c2!&-7l+xd7!i%e*qgfv_&kzc(1fqds=irvlc6h
       - ALLOWED_HOSTS=*,localhost
       - DB_NAME=habit_db
       - DB_USER=postgres
@@ -44,7 +44,7 @@ services:
     environment:
       # IMPORTANT: In browser, localhost refers to YOUR laptop, not the server.
       # Ideally this should be your EC2 IP, but for now localhost works if you port forward or just test.
-      - NEXT_PUBLIC_API_URL=http://localhost:8000/api/
+      - NEXT_PUBLIC_API_URL=http://107.23.42.198:8000/api/
     depends_on:
       - backend
 
