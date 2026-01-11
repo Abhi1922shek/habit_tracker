@@ -1,0 +1,60 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. Get the code
+    - uses: actions/checkout@v3
+
+    # 2. Setup Python (Backend)
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: Install Backend Dependencies
+      run: |
+        cd backend
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    # 3. Basic Django Check (Check for syntax errors)
+    - name: Check Django System
+      run: |
+        cd backend
+        # We create a dummy .env so settings.py doesn't crash during check
+        touch .env
+        echo "SECRET_KEY=test" >> .env
+        echo "DEBUG=True" >> .env
+        echo "ALLOWED_HOSTS=*" >> .env
+        echo "DB_NAME=test" >> .env
+        echo "DB_USER=test" >> .env
+        echo "DB_PASSWORD=test" >> .env
+        echo "DB_HOST=test" >> .env
+        echo "DB_PORT=5432" >> .env
+        python manage.py check
+
+    # 4. Setup Node (Frontend)
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18.x'
+
+    - name: Install Frontend Dependencies
+      run: |
+        cd frontend
+        npm ci
+
+    # 5. Build Frontend (Checks for React errors)
+    - name: Build Next.js
+      run: |
+        cd frontend
+        npm run build
